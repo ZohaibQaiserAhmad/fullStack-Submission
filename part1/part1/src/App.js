@@ -13,13 +13,12 @@ const Header = (props) => {
   );
 }
 
-const Content = (props) => {
-  console.log(props.parts[0].name);
+const Content = ({ parts }) => {
   return (
     <>
-      <Part part={props.parts[0].name} exercise={props.parts[0].exercises} />
-      <Part part={props.parts[1].name} exercise={props.parts[1].exercises} />
-      <Part part={props.parts[2].name} exercise={props.parts[2].exercises} />
+      <Part part={parts[0].name} exercise={parts[0].exercises} />
+      <Part part={parts[1].name} exercise={parts[1].exercises} />
+      <Part part={parts[2].name} exercise={parts[2].exercises} />
 
     </>
   );
