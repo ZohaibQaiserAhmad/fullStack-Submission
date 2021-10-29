@@ -7,11 +7,9 @@ import { nanoid } from 'nanoid'
 import personService from './services/persons';
 
 
-
 const DeletePerson = (props) => {
 
-    const { setPersons, id, persons } = props;
-
+    const { setPersons, id, persons, setAddMessage } = props;
 
     const handleDelete = (ids) => {
         const person = persons.find(p => p.id === ids);
@@ -24,16 +22,22 @@ const DeletePerson = (props) => {
                     console.log(response);
                     setPersons(persons.filter(p => p.id !== ids))
                 })
+                .catch(error => {
+                    const type = "error";
+                    const message = `Information of ${persons.name} has already been removed from server`;
+                    const messageObject = {
+                        type: type,
+                        message: message
+                    }
+                    setAddMessage(messageObject);
+                })
         }
     }
-
     return (
         <button onClick={() => handleDelete(id)}>
             Delete
         </button>
     )
-
-
 }
 
 
@@ -58,6 +62,7 @@ const Persons = (props) => {
         </>);
 
 }
+
 
 
 export default Persons;

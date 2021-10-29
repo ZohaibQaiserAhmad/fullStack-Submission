@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 //import 
 import Filter from './Filter';
@@ -19,6 +18,8 @@ const App = () => {
 
   const [persons, setPersons] = useState([]);
 
+  const [addMessage, setAddMessage] = useState("");
+
   //effect hook
   useEffect(() => {
 
@@ -31,15 +32,38 @@ const App = () => {
   }, [])
 
 
+  const Notification = ({ message }) => {
+
+    console.log("here", message);
+    if (message === null || !message.type) {
+      return null
+    }
+
+    else if (message.type === 'success') {
+      return (
+        <div className="success">
+          {message.message}
+        </div>
+      )
+    }
+    else if (message.type === 'error') {
+      return (
+        <div className="error">
+          {message.message}
+        </div>
+      )
+    }
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={addMessage} />
       <Filter setFilter={setFilter} filter={filter} />
       <h3>Add a new</h3>
-      <PersonForm setPersons={setPersons} persons={persons} />
+      <PersonForm setPersons={setPersons} persons={persons} addMessage={addMessage} setAddMessage={setAddMessage} />
       <h2>Numbers</h2>
-      <Persons filter={filter} persons={persons} setPersons={setPersons} />
+      <Persons filter={filter} persons={persons} setPersons={setPersons} addMessage={addMessage} setAddMessage={setAddMessage} />
 
     </div>
   )
