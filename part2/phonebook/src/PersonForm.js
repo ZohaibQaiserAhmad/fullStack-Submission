@@ -1,4 +1,9 @@
+import axios from 'axios';
 import React, { useState } from 'react'
+
+//import service
+import personService from './services/persons';
+
 
 
 const PersonForm = (props) => {
@@ -21,34 +26,57 @@ const PersonForm = (props) => {
 
     //handle adding persons
     const addPerson = (event) => {
+
         event.preventDefault();
 
         //variable to handle duplicate
-        let duplicate = false;
+        const person = persons.find(p => p.name === newName);
 
         //check if values is there
-        for (var i in persons) {
-            if (newName === persons[i].name) {
-                duplicate = true; //duplicate
-                window.alert(`${newName} is already added to phonebook`);
+        if (person) {
+
+            const changedPerson = { ...person, number: newPhone };
+
+            if (window.confirm(`${person.name} is already added to phonebook,replace the old number with a new one?`)) {
+
+                personService
+                    .update(person.id, changedPerson)
+                    .then(returnedPerson => {
+                        setPersons(persons.map(person => person.name !== newName ? person : returnedPerson))
+                    }).catch(error => {
+                        alert(
+                            `the person '${person.name}' was already deleted from server`
+                        )
+                        setPersons(persons.filter(person => person.name !== newName))
+                    })
             }
+
         }
 
         //create object useing new name, if not in persons
-        if (!(duplicate)) {
+        else {
 
             const personObject = {
                 name: newName,
                 number: newPhone
             }
 
+            personService
+                .create(personObject)
+                .then(returnedPerson => {
+                    setPersons(persons.concat(returnedPerson));
+                    setNewName('');
+                    setPhoneNumber('');
 
-            setPersons(persons.concat(personObject));
+                })
+
+
         }
 
         //reset after creating
         setNewName('');
         setPhoneNumber('');
+
     }
 
     return (

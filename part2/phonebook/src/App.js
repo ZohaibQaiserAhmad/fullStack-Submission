@@ -6,6 +6,11 @@ import Filter from './Filter';
 import PersonForm from './PersonForm';
 import Persons from './Persons';
 
+//import service
+import personService from './services/persons';
+
+
+
 
 const App = () => {
 
@@ -17,9 +22,10 @@ const App = () => {
   //effect hook
   useEffect(() => {
 
-    axios.get("http://localhost:3001/persons")
-      .then(response => {
-        setPersons(response.data);
+    personService
+      .getAll()
+      .then(intialPersons => {
+        setPersons(intialPersons)
       })
 
   }, [])
@@ -33,7 +39,8 @@ const App = () => {
       <h3>Add a new</h3>
       <PersonForm setPersons={setPersons} persons={persons} />
       <h2>Numbers</h2>
-      <Persons filter={filter} persons={persons} />
+      <Persons filter={filter} persons={persons} setPersons={setPersons} />
+
     </div>
   )
 }
